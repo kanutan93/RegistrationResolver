@@ -36,7 +36,7 @@ fn save_user_to_db(user: &mut User, db_config: &DbConfig) {
         .execute(conn)
         .expect("Can't save user to db!");
 
-    info!("User \"{}\" was saved successfully to db!", user.login);
+    info!("User \"{}\" has been successfully saved to db!", user.login);
 }
 
 fn produce_message(user: &User, kafka_config: &KafkaConfig) {
