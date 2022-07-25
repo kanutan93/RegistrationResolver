@@ -1070,7 +1070,10 @@ dependencies = [
  "dotenv",
  "env_logger",
  "log",
+ "rand",
  "rdkafka",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
