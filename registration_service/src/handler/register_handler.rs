@@ -35,7 +35,7 @@ fn save_user_to_db(user: &User, db_config: &DbConfig) {
 }
 
 fn produce_message(user: &User, kafka_config: &KafkaConfig) {
-    let KafkaConfig {producer, consumer, topic} = kafka_config;
+    let KafkaConfig {producer, topic, ..} = kafka_config;
 
     let key = &user.login;
     let payload = user.to_string();

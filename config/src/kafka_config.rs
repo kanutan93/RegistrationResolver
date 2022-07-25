@@ -1,6 +1,5 @@
 use std::env;
 use rdkafka::ClientConfig;
-use rdkafka::config::RDKafkaLogLevel;
 use rdkafka::consumer::{StreamConsumer};
 use rdkafka::producer::BaseProducer;
 
