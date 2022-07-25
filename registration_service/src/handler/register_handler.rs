@@ -1,5 +1,8 @@
+use std::borrow::BorrowMut;
+use std::ops::Deref;
 use std::time::Duration;
 use actix_web::{HttpResponse, post, web::{Json, Data}};
+use bcrypt::DEFAULT_COST;
 use diesel::associations::HasTable;
 use diesel::{RunQueryDsl};
 use log::info;
@@ -11,9 +14,9 @@ use crate::model::user::User;
 use crate::schema::users::dsl::users;
 
 #[post("/register")]
-pub async fn register(user: Json<User>, app_config: Data<AppConfig>) -> HttpResponse {
+pub async fn register(mut user: Json<User>, app_config: Data<AppConfig>) -> HttpResponse {
     let AppConfig {kafka_config, db_config} = app_config.get_ref();
-    let user = &user.0;
+    let mut user = &mut user.0;
 
     save_user_to_db(user, db_config);
     produce_message(user, kafka_config);
@@ -21,13 +24,15 @@ pub async fn register(user: Json<User>, app_config: Data<AppConfig>) -> HttpResp
     HttpResponse::Created().finish()
 }
 
-fn save_user_to_db(user: &User, db_config: &DbConfig) {
+fn save_user_to_db(user: &mut User, db_config: &DbConfig) {
     let DbConfig {conn} = db_config;
 
     info!("Trying to save user: \"{}\" to db...", user.login);
 
+    user.password = bcrypt::hash(&user.password, 4).unwrap();
+
     diesel::insert_into(users::table())
-        .values(user)
+        .values(user.deref())
         .execute(conn)
         .expect("Can't save user to db!");
 
