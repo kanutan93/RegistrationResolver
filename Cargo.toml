@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "registration_service",
+    "resolver_service",
+    "notification_service"
+]
