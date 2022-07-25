@@ -3,16 +3,14 @@ extern crate diesel;
 
 mod handler;
 mod model;
-mod config;
 mod schema;
 
 use std::env;
 use actix_web::{App, HttpServer, web::Data};
 use tracing_actix_web::{DefaultRootSpanBuilder, TracingLogger};
-use config::kafka_config;
-use crate::config::db_config::DbConfig;
+use config::db_config::DbConfig;
+use config::kafka_config::KafkaConfig;
 use crate::handler::register_handler;
-use crate::kafka_config::KafkaConfig;
 
 pub struct AppConfig {
     kafka_config: KafkaConfig,

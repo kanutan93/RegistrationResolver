@@ -2,5 +2,6 @@
 members = [
     "registration_service",
     "resolver_service",
-    "notification_service"
+    "notification_service",
+    "config"
 ]

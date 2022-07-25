@@ -4,8 +4,10 @@ use diesel::associations::HasTable;
 use diesel::{RunQueryDsl};
 use log::info;
 use rdkafka::producer::{BaseRecord, Producer};
+use config::db_config::DbConfig;
+use config::kafka_config::KafkaConfig;
+use crate::AppConfig;
 use crate::model::user::User;
-use crate::{AppConfig, DbConfig, KafkaConfig};
 use crate::schema::users::dsl::users;
 
 #[post("/register")]
@@ -33,7 +35,7 @@ fn save_user_to_db(user: &User, db_config: &DbConfig) {
 }
 
 fn produce_message(user: &User, kafka_config: &KafkaConfig) {
-    let KafkaConfig {producer, topic} = kafka_config;
+    let KafkaConfig {producer, consumer, topic} = kafka_config;
 
     let key = &user.login;
     let payload = user.to_string();
