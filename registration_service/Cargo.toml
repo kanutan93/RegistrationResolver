@@ -13,3 +13,5 @@ rdkafka = { version = "0.25", features = ["cmake-build"] }
 dotenv = "0.15.0"
 log = "0.4.0"
 env_logger = "0.8.4"
+diesel = {version = "1.4.8", features = ["postgres"]}
+tracing-actix-web = "0.6"

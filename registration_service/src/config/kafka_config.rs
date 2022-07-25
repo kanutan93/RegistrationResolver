@@ -1,6 +1,5 @@
 use std::env;
 use rdkafka::ClientConfig;
-use rdkafka::error::KafkaResult;
 use rdkafka::producer::BaseProducer;
 
 pub struct KafkaConfig {

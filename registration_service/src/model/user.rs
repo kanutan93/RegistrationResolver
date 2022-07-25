@@ -1,17 +1,14 @@
 use serde::{Serialize, Deserialize};
+use schema::users;
+use crate::schema;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Insertable)]
+#[table_name="users"]
 pub struct User {
-    login: String,
-    password: String,
-    email: String,
-    full_name: String,
-}
-
-impl User {
-    pub fn get_login(&self) -> &str {
-        &self.login
-    }
+    pub login: String,
+    pub password: String,
+    pub email: String,
+    pub full_name: String,
 }
 
 impl ToString for User {
