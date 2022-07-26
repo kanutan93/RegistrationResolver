@@ -21,7 +21,7 @@ pub async fn register(mut user: Json<User>, app_config: Data<(KafkaConfig, DbCon
     HttpResponse::Created().finish()
 }
 
-fn save_user_to_db(user: &mut User, db_config: &DbConfig) {
+pub fn save_user_to_db(user: &mut User, db_config: &DbConfig) {
     let DbConfig {conn} = db_config;
 
     info!("Trying to save user: \"{}\" to db...", user.login);
