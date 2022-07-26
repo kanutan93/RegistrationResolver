@@ -1,5 +1,4 @@
 use std::env;
-use dotenv::dotenv;
 use rdkafka::consumer::Consumer;
 use rdkafka::Message;
 use testcontainers::clients;
@@ -9,7 +8,6 @@ use registration_service::handler;
 use registration_service::model::user::User;
 
 fn init() {
-    dotenv().ok();
     let _ = env_logger::builder().is_test(true).try_init();
 }
 
@@ -27,12 +25,11 @@ async fn produce_message_test() {
 
     env::set_var("KAFKA_BOOTSTRAP_SERVERS", &bootstrap_server);
 
-    let topic = env::var("KAFKA_REGISTRATION_TOPIC")
-        .expect("KAFKA_REGISTRATION_TOPIC env var isn't set!");
+    let topic = "registration";
 
     let user = User::default();
 
-    let kafka_config = KafkaConfig::new(topic.clone());
+    let kafka_config = KafkaConfig::new(topic.to_string());
 
     handler::register_handler::produce_message(&user, &kafka_config);
 
