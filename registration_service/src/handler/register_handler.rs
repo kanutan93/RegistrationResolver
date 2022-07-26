@@ -1,8 +1,6 @@
-use std::borrow::BorrowMut;
 use std::ops::Deref;
 use std::time::Duration;
 use actix_web::{HttpResponse, post, web::{Json, Data}};
-use bcrypt::DEFAULT_COST;
 use diesel::associations::HasTable;
 use diesel::{RunQueryDsl};
 use log::info;
@@ -15,7 +13,7 @@ use crate::schema::users::dsl::users;
 #[post("/register")]
 pub async fn register(mut user: Json<User>, app_config: Data<(KafkaConfig, DbConfig)>) -> HttpResponse {
     let (kafka_config, db_config) = app_config.get_ref();
-    let mut user = &mut user.0;
+    let user = &mut user.0;
 
     save_user_to_db(user, db_config);
     produce_message(user, kafka_config);
