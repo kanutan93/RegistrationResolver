@@ -9,13 +9,12 @@ use log::info;
 use rdkafka::producer::{BaseRecord, Producer};
 use config::db_config::DbConfig;
 use config::kafka_config::KafkaConfig;
-use crate::AppConfig;
 use crate::model::user::User;
 use crate::schema::users::dsl::users;
 
 #[post("/register")]
-pub async fn register(mut user: Json<User>, app_config: Data<AppConfig>) -> HttpResponse {
-    let AppConfig {kafka_config, db_config} = app_config.get_ref();
+pub async fn register(mut user: Json<User>, app_config: Data<(KafkaConfig, DbConfig)>) -> HttpResponse {
+    let (kafka_config, db_config) = app_config.get_ref();
     let mut user = &mut user.0;
 
     save_user_to_db(user, db_config);
@@ -39,7 +38,7 @@ fn save_user_to_db(user: &mut User, db_config: &DbConfig) {
     info!("User \"{}\" has been successfully saved to db!", user.login);
 }
 
-fn produce_message(user: &User, kafka_config: &KafkaConfig) {
+pub fn produce_message(user: &User, kafka_config: &KafkaConfig) {
     let KafkaConfig {producer, topic, ..} = kafka_config;
 
     let key = &user.login;

@@ -1,21 +1,9 @@
-#[macro_use]
-extern crate diesel;
-
-mod handler;
-mod model;
-mod schema;
-
 use std::env;
 use actix_web::{App, HttpServer, web::Data};
 use tracing_actix_web::{DefaultRootSpanBuilder, TracingLogger};
 use config::db_config::DbConfig;
 use config::kafka_config::KafkaConfig;
-use crate::handler::register_handler;
-
-pub struct AppConfig {
-    kafka_config: KafkaConfig,
-    db_config: DbConfig,
-}
+use registration_service::handler::register_handler;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -33,10 +21,10 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || App::new()
         .wrap(TracingLogger::<DefaultRootSpanBuilder>::new())
-        .app_data(Data::new(AppConfig {
-            kafka_config: KafkaConfig::new(topic.clone()),
-            db_config: DbConfig::new(database_url.clone()),
-        }))
+        .app_data(Data::new((
+            KafkaConfig::new(topic.clone()),
+            DbConfig::new(database_url.clone()),
+        )))
         .service(register_handler::register))
         .bind((ip, port.parse().unwrap()))?
         .run()

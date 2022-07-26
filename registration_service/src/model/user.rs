@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
-use schema::users;
-use crate::schema;
+use crate::schema::users;
 
 #[derive(Debug, Serialize, Deserialize, Insertable)]
 #[table_name="users"]
